@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+input[type=text], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: #04AA6D;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+.container {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+</style>
+</head>
+<body>
+
+<h3>search mp3 library</h3>
+
+<div class="container">
+  <form action="../mp3/search">
+    <label for="size">Results Size</label>
+    <input type="text" id="size" name="size" value="100" placeholder="10">
+
+    <!-- <label for="json">json formatted results?</label> -->
+    <!-- <select id="json" name="json"> -->
+    <!--   <option value="false">I dont want json</option> -->
+    <!--   <option value="true">I want json</option> -->
+    <!-- </select> -->
+
+    <label for="q">mp3 files with these words</label>
+    <textarea id="q" name="q" placeholder="grace gospel" style="height:200px">my gospel</textarea>
+
+    <input type="submit" value="Submit">
+  </form>
+</div>
+
+</body>
+
+</html>
