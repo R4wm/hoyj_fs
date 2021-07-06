@@ -1,0 +1,42 @@
+package main
+
+import (
+	"fmt"
+	"io/ioutil"
+	"os"
+	"strings"
+)
+
+func check_error(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
+
+func create_link(directory, file string) string {
+	url := "https://helpersofyourjoy.com/media"
+	result := strings.Join([]string{url, directory, file}, "/")
+	return result
+}
+
+func main() {
+	pwd, err := os.Getwd()
+	check_error(err)
+	fmt.Println(pwd)
+
+	// get files in the directory
+	fileInfo, err := ioutil.ReadDir(pwd)
+	check_error(err)
+
+	var files []string
+	for _, file := range fileInfo {
+		files = append(files, file.Name())
+	}
+
+	for _, v := range files {
+		fmt.Println("v: ", v)
+		fmt.Println(create_link(pwd, v))
+	}
+
+	fmt.Println("End of program")
+}
