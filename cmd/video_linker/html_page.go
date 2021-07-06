@@ -7,9 +7,11 @@ import (
 	"strings"
 )
 
-type Video struct {
-	Link  string
-	Title string
+type Media struct {
+	VideoLink    string
+	AudioLink    string
+	DocumentLink string
+	Title        string
 }
 
 func check_error(err error) {
@@ -18,12 +20,12 @@ func check_error(err error) {
 	}
 }
 
-func create_link(directory, file string) Video {
+func create_link(directory, file string) Media {
 	url := "https://helpersofyourjoy.com/media"
 	result := strings.Join([]string{url, directory, file}, "/")
-	return Video{
-		Link:  result,
-		Title: "something",
+	return Media{
+		VideoLink: result,
+		Title:     "something",
 	}
 }
 
@@ -55,7 +57,7 @@ func main() {
 		files = append(files, file.Name())
 	}
 
-	videos := []Video{}
+	videos := []Media{}
 
 	for _, v := range files {
 		fmt.Println("v: ", v)
