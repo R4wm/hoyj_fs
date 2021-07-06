@@ -27,6 +27,17 @@ func create_link(directory, file string) Video {
 	}
 }
 
+// ignore returns true if file should be ignored
+func ignore(file string) bool {
+	ignore_list := []string{"#", "~"}
+	for _, v := range ignore_list {
+		if strings.Contains(file, v) {
+			return true
+		}
+	}
+	return false
+}
+
 func main() {
 	pwd, err := os.Getwd()
 	check_error(err)
@@ -45,8 +56,13 @@ func main() {
 	}
 
 	videos := []Video{}
+
 	for _, v := range files {
 		fmt.Println("v: ", v)
+		if ignore(v) {
+			fmt.Printf("skipping: %s\n", v)
+			continue
+		}
 		videoObj := create_link(directory, v)
 		videos = append(videos, videoObj)
 	}
