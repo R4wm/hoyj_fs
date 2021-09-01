@@ -12,6 +12,7 @@ def populate_redis(a_media_file: str) -> None:
     fileHandler = open(a_media_file, 'r')
     lines = fileHandler.readlines()
     redis_path = 'HOYJ::MP3::MAP::DUMP'
+    redis_inprogress = 'HOYJ::MP3::MAP::INPROGRESS'
     redis_handler = redis.Redis()
     
     count = 0
@@ -31,6 +32,8 @@ def populate_redis(a_media_file: str) -> None:
             print('url prefix: {}'.format(url_prefix))
             complete_url='https://{}.{}/{}'.format(url_prefix, base_url, message_title)
         print('this is complete url: {}'.format(complete_url))
-        redis_handler.sadd(redis_path , complete_url)
-    
+        redis_handler.sadd(redis_inprogress , complete_url)
+
+    redis_handler.rename(redis_inprogress, redis_path)
+
 populate_redis('/tmp/media.txt')
