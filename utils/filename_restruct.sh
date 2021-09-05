@@ -27,7 +27,7 @@ COMEBACK=$(pwd)
 
 
 #####################################
-# remove all files with "*.mp3.mp3" #
+# rename all files with "*.mp3.mp3" #
 #####################################
 # for i in $(find . -iname "*.mp3.mp3" -print)
 # do
@@ -90,17 +90,50 @@ COMEBACK=$(pwd)
 ################
 # TAG Speakers #
 ################
-for i in $(find . -iname "*richard*jordan*" -print)
-do
-    echo "$i"
-    kid3-cli -c "set artist richard_jordan"
-    echo "finished tagging speaker $i"
-done
+# for i in $(find . -iname "*richard*jordan*" -print)
+# do
+#     echo "$i"
+#     kid3-cli -c "set artist richard_jordan"
+#     echo "finished tagging speaker $i"
+# done
 
 
-for i in $(find . -iname "*nate*cody*" -print)
-do
-    echo "$i"
-    kid3-cli -c "set artist nate_cody"
-    echo "finished tagging speaker $i"
-done
+# for i in $(find . -iname "*nate*cody*" -print)
+# do
+#     echo "$i"
+#     kid3-cli -c "set artist nate_cody"
+#     echo "finished tagging speaker $i"
+# done
+
+#################################
+# remove commas from file names #
+#################################
+remove_commas(){
+    for i in $(find . -type f -iname "*,*" -print)
+    do
+        badfilename=$(basename "$i")
+        echo "bad filename:  $badfilename"
+        goodfilename=$(echo "$badfilename" | sed 's/\,//g')
+        echo "goodfilename: $(realpath $goodfilename)"
+        mv -v "$i" "$goodfilename"
+    done
+}
+
+#################################
+# remove commas from file names #
+#################################
+remove_apostrophe(){
+    for i in $(find . -type f -iname "*'*" -print)
+    do
+        badfilename=$(basename "$i")
+        echo "bad filename:  $badfilename"
+        goodfilename=$(echo "$badfilename" | sed "s/'//g")
+        echo "goodfilename: $(realpath $goodfilename)"
+        mv -v "$i" "$goodfilename"
+    done
+}
+
+##############
+# CONTROLLER #
+##############
+remove_apostrophe
