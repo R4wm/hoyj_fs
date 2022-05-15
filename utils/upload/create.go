@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,20 +11,20 @@ import (
 )
 
 type reference struct {
-	book         string
-	startChapter string
-	endChapter   string
-	startVerse   string
-	endVerse     string
+	Book         string `json:"book"`
+	StartChapter string `json:"startChapter"`
+	EndChapter   string `json:"endChapter"`
+	StartVerse   string `json:"startVerse"`
+	EndVerse     string `json:"endVerse"`
 }
 
 type mediaData struct {
-	date    string
-	subject string
-	title   string
-	speaker string
-	partNum string
-	refs    []reference
+	Date    string      `json:"date"`
+	Subject string      `json:"subject"`
+	Title   string      `json:"title"`
+	Speaker string      `json:"speaker"`
+	PartNum string      `json:"partNum"`
+	Refs    []reference `json:"refs"`
 }
 
 func (m *mediaData) createFileName() string {
@@ -31,29 +32,29 @@ func (m *mediaData) createFileName() string {
 }
 
 func (m *mediaData) clean() {
-	m.date = strings.TrimSuffix(m.date, "\n")
-	m.date = strings.ToLower(m.date)
-	m.subject = strings.TrimSuffix(m.subject, "\n")
-	m.subject = strings.ToLower(m.subject)
-	m.title = strings.TrimSuffix(m.title, "\n")
-	m.title = strings.ToLower(m.title)
-	m.speaker = strings.TrimSuffix(m.speaker, "\n")
-	m.speaker = strings.ToLower(m.speaker)
-	m.partNum = strings.TrimSuffix(m.partNum, "\n")
-	m.partNum = strings.ToLower(m.partNum)
+	m.Date = strings.TrimSuffix(m.Date, "\n")
+	m.Date = strings.ToLower(m.Date)
+	m.Subject = strings.TrimSuffix(m.Subject, "\n")
+	m.Subject = strings.ToLower(m.Subject)
+	m.Title = strings.TrimSuffix(m.Title, "\n")
+	m.Title = strings.ToLower(m.Title)
+	m.Speaker = strings.TrimSuffix(m.Speaker, "\n")
+	m.Speaker = strings.ToLower(m.Speaker)
+	m.PartNum = strings.TrimSuffix(m.PartNum, "\n")
+	m.PartNum = strings.ToLower(m.PartNum)
 }
 
 func (r *reference) clean() {
-	r.book = strings.TrimSuffix(r.book, "\n")
-	r.book = strings.ToLower(r.book)
-	r.startChapter = strings.TrimSuffix(r.startChapter, "\n")
-	r.endChapter = strings.TrimSuffix(r.endChapter, "\n")
-	r.startVerse = strings.TrimSuffix(r.startVerse, "\n")
-	r.endVerse = strings.TrimSuffix(r.endVerse, "\n")
+	r.Book = strings.TrimSuffix(r.Book, "\n")
+	r.Book = strings.ToLower(r.Book)
+	r.StartChapter = strings.TrimSuffix(r.StartChapter, "\n")
+	r.EndChapter = strings.TrimSuffix(r.EndChapter, "\n")
+	r.StartVerse = strings.TrimSuffix(r.StartVerse, "\n")
+	r.EndVerse = strings.TrimSuffix(r.EndVerse, "\n")
 }
 
 func (r *reference) sanitize() {
-	r.book = strings.ReplaceAll(r.book, " ", "_")
+	r.Book = strings.ReplaceAll(r.Book, " ", "_")
 }
 
 func createRef() *reference {
@@ -61,19 +62,19 @@ func createRef() *reference {
 	r := reference{}
 	// book
 	fmt.Printf("book name: ")
-	r.book, _ = reader.ReadString('\n')
+	r.Book, _ = reader.ReadString('\n')
 	// startChapter
 	fmt.Printf("starting chapter: ")
-	r.startChapter, _ = reader.ReadString('\n')
+	r.StartChapter, _ = reader.ReadString('\n')
 	// endChapter
 	fmt.Printf("ending chapter: ")
-	r.endChapter, _ = reader.ReadString('\n')
+	r.EndChapter, _ = reader.ReadString('\n')
 	// startVerse
 	fmt.Printf("starting verse: ")
-	r.startVerse, _ = reader.ReadString('\n')
+	r.StartVerse, _ = reader.ReadString('\n')
 	// endVerse
 	fmt.Printf("ending verse: ")
-	r.endVerse, _ = reader.ReadString('\n')
+	r.EndVerse, _ = reader.ReadString('\n')
 
 	r.clean()
 	return &r
@@ -81,28 +82,28 @@ func createRef() *reference {
 
 // replace space for _
 func (m *mediaData) sanitize() {
-	m.subject = strings.ReplaceAll(m.subject, " ", "_")
-	m.title = strings.ReplaceAll(m.title, " ", "_")
-	m.speaker = strings.ReplaceAll(m.speaker, " ", "_")
+	m.Subject = strings.ReplaceAll(m.Subject, " ", "_")
+	m.Title = strings.ReplaceAll(m.Title, " ", "_")
+	m.Speaker = strings.ReplaceAll(m.Speaker, " ", "_")
 }
 
 func (m *mediaData) makeFileName() string {
 	result := ""
 	// date
-	result = result + fmt.Sprintf("date.%s", m.date)
+	result = result + fmt.Sprintf("date.%s", m.Date)
 	// series
-	if m.subject != "" {
-		result = result + fmt.Sprintf("-series.%s", m.subject)
+	if m.Subject != "" {
+		result = result + fmt.Sprintf("-series.%s", m.Subject)
 	} else {
 		result = result + fmt.Sprintf("-series.null")
 	}
-	if m.speaker != "" {
-		result = result + fmt.Sprintf("-speaker.%s", m.speaker)
+	if m.Speaker != "" {
+		result = result + fmt.Sprintf("-speaker.%s", m.Speaker)
 	} else {
 		result = result + fmt.Sprintf("-speaker.null")
 	}
-	if m.partNum != "" {
-		result = result + fmt.Sprintf("-part.%s", m.partNum)
+	if m.PartNum != "" {
+		result = result + fmt.Sprintf("-part.%s", m.PartNum)
 	} else {
 		result = result + fmt.Sprintf("-part.null")
 	}
@@ -117,39 +118,39 @@ func (m *mediaData) addRefToFileName(fileName string) string {
 	// startVerse   string
 	// endVerse     string
 	refs := ".--"
-	for i := 0; i < len(m.refs); i++ {
-		refs = refs + fmt.Sprintf("book.%s", m.refs[i].book)
+	for i := 0; i < len(m.Refs); i++ {
+		refs = refs + fmt.Sprintf("book.%s", m.Refs[i].Book)
 
-		if m.refs[i].startChapter != "" {
-			_, err := strconv.Atoi(m.refs[i].startChapter)
+		if m.Refs[i].StartChapter != "" {
+			_, err := strconv.Atoi(m.Refs[i].StartChapter)
 			if err != nil {
 				panic(err)
 			}
-			refs = refs + fmt.Sprintf("-startchapter.%s", m.refs[i].startChapter)
+			refs = refs + fmt.Sprintf("-startchapter.%s", m.Refs[i].StartChapter)
 		}
 
-		if m.refs[i].endChapter != "" {
-			_, err := strconv.Atoi(m.refs[i].endChapter)
+		if m.Refs[i].EndChapter != "" {
+			_, err := strconv.Atoi(m.Refs[i].EndChapter)
 			if err != nil {
 				panic(err)
 			}
-			refs = refs + fmt.Sprintf("-startchapter.%s", m.refs[i].endChapter)
+			refs = refs + fmt.Sprintf("-startchapter.%s", m.Refs[i].EndChapter)
 		}
 
-		if m.refs[i].startVerse != "" {
-			_, err := strconv.Atoi(m.refs[i].startVerse)
+		if m.Refs[i].StartVerse != "" {
+			_, err := strconv.Atoi(m.Refs[i].StartVerse)
 			if err != nil {
 				panic(err)
 			}
-			refs = refs + fmt.Sprintf("-startverse.%s", m.refs[i].startVerse)
+			refs = refs + fmt.Sprintf("-startverse.%s", m.Refs[i].StartVerse)
 		}
 
-		if m.refs[i].endVerse != "" {
-			_, err := strconv.Atoi(m.refs[i].endVerse)
+		if m.Refs[i].EndVerse != "" {
+			_, err := strconv.Atoi(m.Refs[i].EndVerse)
 			if err != nil {
 				panic(err)
 			}
-			refs = refs + fmt.Sprintf("-endverse.%s", m.refs[i].endVerse)
+			refs = refs + fmt.Sprintf("-endverse.%s", m.Refs[i].EndVerse)
 		}
 	}
 	// double period is our end marker
@@ -173,19 +174,19 @@ func main() {
 	m := mediaData{}
 	// Date
 	fmt.Println("date format: YYYYMMDD")
-	m.date, _ = reader.ReadString('\n')
+	m.Date, _ = reader.ReadString('\n')
 	// Series
 	fmt.Printf("series name? %s", skipStr)
-	m.subject, _ = reader.ReadString('\n')
+	m.Subject, _ = reader.ReadString('\n')
 	// Speaker
 	fmt.Printf("speaker name: %s", skipStr)
-	m.speaker, _ = reader.ReadString('\n')
+	m.Speaker, _ = reader.ReadString('\n')
 	// Title
 	fmt.Printf("title name?: ")
-	m.title, _ = reader.ReadString('\n')
+	m.Title, _ = reader.ReadString('\n')
 	// Part number
 	fmt.Printf("part number?: %s ", skipStr)
-	m.partNum, _ = reader.ReadString('\n')
+	m.PartNum, _ = reader.ReadString('\n')
 	m.clean()
 	m.sanitize()
 	// scripture reference
@@ -195,7 +196,7 @@ func main() {
 	if addRefs == "\n" {
 		fmt.Println("all done")
 	} else {
-		m.refs = append(m.refs, *createRef())
+		m.Refs = append(m.Refs, *createRef())
 	}
 
 	fmt.Println("location of the media file?: ")
@@ -220,5 +221,11 @@ func main() {
 	fmt.Println("dest: ", dest)
 	os.Rename(originalFileLocation, dest)
 
+	// json output
+	jsonData, err := json.Marshal(m)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(jsonData))
 	fmt.Println("EOF")
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -110,10 +111,33 @@ func mp3Search(w http.ResponseWriter, r *http.Request) {
 	check(err)
 }
 
+func mediaInfo(w http.ResponseWriter, r *http.Request) {
+	// Get everything from redis
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "localhost:6379",
+		DB:       0,
+		Password: "",
+	})
+	fmt.Println(redisSetName)
+	val, err := rdb.SMembers(redisSetName).Result()
+	if err != nil {
+		fmt.Println("Failed to parse redis: ", err)
+	}
+	sort.Strings(val)
+	haha, err := json.Marshal(val)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(fmt.Sprintf("failed: %s", err)))
+	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Write(haha)
+}
+
 // main: run the search engine
 func main() {
 	port := "127.0.0.1:8082"
 	http.HandleFunc("/mp3/search", mp3Search)
+	http.HandleFunc("/media/info", mediaInfo)
 	if err := http.ListenAndServe(port, nil); err != nil {
 		log.Fatal(err)
 	}
