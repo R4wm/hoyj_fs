@@ -286,7 +286,7 @@ func main() {
 	// search function returning html with result
 	r.HandleFunc("/mp3/search", mp3Search)
 	// json output listing all resources
-	r.HandleFunc("/directory/info", mediaInfo)
+	r.HandleFunc("/media/info", mediaInfo)
 	srv := &http.Server{
 		Handler: r,
 		Addr:    addr,
