@@ -242,7 +242,6 @@ func mediaInfo(w http.ResponseWriter, r *http.Request) {
 }
 
 func topicDirectory(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("running topicDirectory")
 	vars := mux.Vars(r)
 	w.WriteHeader(http.StatusOK)
 
@@ -255,12 +254,8 @@ func topicDirectory(w http.ResponseWriter, r *http.Request) {
 
 	redisResult := redisCli.SMembers(redisKey).Val()
 	sort.Strings(redisResult)
-	fmt.Println("this is redis result: ", redisResult)
-	// if not exists return 404
+	// fmt.Println("this is redis result: ", redisResult)
 
-	// create template function to strip title from url
-
-	// pass in the slice of urls
 	funcs := template.FuncMap{"createLink": func(b string) string {
 		breakit := strings.Split(b, "/")
 		return breakit[len(breakit)-1]
@@ -282,14 +277,19 @@ func topicDirectory(w http.ResponseWriter, r *http.Request) {
 
 // main: run the search engine
 func main() {
+	addr := "127.0.0.1:8082"
 	r := mux.NewRouter()
+	// returns html page with resources per category selected
 	r.HandleFunc("/directory/{category}", topicDirectory)
+	// html page of categories to select from
 	r.HandleFunc("/directory", listMedia)
+	// search function returning html with result
 	r.HandleFunc("/mp3/search", mp3Search)
-	r.HandleFunc("/media/info", mediaInfo)
+	// json output listing all resources
+	r.HandleFunc("/directory/info", mediaInfo)
 	srv := &http.Server{
 		Handler: r,
-		Addr:    "127.0.0.1:8082",
+		Addr:    addr,
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
