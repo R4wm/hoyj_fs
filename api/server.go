@@ -99,7 +99,7 @@ const chapterButtonsTemplate = `
     <p><center><h1> {{ .Name }} </h1><center></p>
     <button onclick="window.location.href='https://helpersofyourjoy.com';" class="w3-bar-item w3-button" style="width:33.3%">Return to helpersofyourjoy.com</button>
     {{ range $index, $results := .Series }}
-    <p><button class="block" onclick="window.location.href = '{{ add "./directory/" $results }}'">{{ $results }}</button></p>
+    <p><button class="block" onclick="window.location.href = '{{ add "./media/" $results }}'">{{ $results }}</button></p>
     {{ end }}
   </body>
 </html>
@@ -279,14 +279,14 @@ func topicDirectory(w http.ResponseWriter, r *http.Request) {
 func main() {
 	addr := "127.0.0.1:8082"
 	r := mux.NewRouter()
-	// returns html page with resources per category selected
-	r.HandleFunc("/directory/{category}", topicDirectory)
-	// html page of categories to select from
-	r.HandleFunc("/directory", listMedia)
 	// search function returning html with result
 	r.HandleFunc("/mp3/search", mp3Search)
+	// html page of categories to select from
+	r.HandleFunc("/media", listMedia)
 	// json output listing all resources
 	r.HandleFunc("/media/info", mediaInfo)
+	// returns html page with resources per category selected
+	r.HandleFunc("/media/{category}", topicDirectory)
 	srv := &http.Server{
 		Handler: r,
 		Addr:    addr,
