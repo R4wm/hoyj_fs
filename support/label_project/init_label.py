@@ -6,6 +6,7 @@ import re
 speakers = ['alex_kurz', # acts-series-alex-kurz
             'barry_curtis', 'bryan_ross', 'dave_stout',
             'david_busch', 'david_stout', 'elbert_ray', 'eric_neumann',
+            'henry_meneses',
             'garrett_kaylor', 'gene_fuqua', 'jeff_halcomb', 'jim_lawrence',
             'joe_purczynski', 'john_versegen', 'john_verstegen',
             'keith_baxter', 'morris_chestnut', 'nate_cody', 'paul_zoerb',
@@ -180,8 +181,16 @@ class Message:
                 self.part = int(cornerCase1.group(3))
                 return
 
+    def lastMinuteChanges(self):
+        if self.book == 'timothy':
+            if '1_timothy' in self.filename:
+                self.book = '1 timothy'
+            elif '2_timothy' in self.filename:
+                self.book = '2 timothy'
 
-        
+
+
+
 # function to identify year, return Y-M-D
 
 # function to get topic from .split('/')[0]
@@ -193,103 +202,103 @@ class Message:
 
 def main():
 
-    # test topic starting with year
-    s = Message(filename='2011-rightly-dividing-training-series/20101212-SUN-1000-RIGHTLY_DIVIDING_TRAINING_SERIES-GODS_PROPHECIED_PLAN_TO_RECONCILE_THE_EARTH-JOHN_VERSTEGEN.mp3')
-    s.setTopic()
-    s.setSpeaker()
-    s.setMD5Sum()
-    s.setBook()
-    s.setChapter()
-    s.setVerses()
-    s.setPart()
-    print(s.__dict__)
+    # # test topic starting with year
+    # s = Message(filename='2011-rightly-dividing-training-series/20101212-SUN-1000-RIGHTLY_DIVIDING_TRAINING_SERIES-GODS_PROPHECIED_PLAN_TO_RECONCILE_THE_EARTH-JOHN_VERSTEGEN.mp3')
+    # s.setTopic()
+    # s.setSpeaker()
+    # s.setMD5Sum()
+    # s.setBook()
+    # s.setChapter()
+    # s.setVerses()
+    # s.setPart()
+    # print(s.__dict__)
 
-    t = Message(filename='acts-series--bro-willard/Acts_21_v_24_to_40_ch_22_v_1_to_15_Jun_2_2011.mp3')
-    t.setTopic()
-    t.setSpeaker()
-    t.setMD5Sum()
-    t.setBook()
-    t.setChapter()
-    t.setVerses()
-    t.setPart()
-    print(t.__dict__)
+    # t = Message(filename='acts-series--bro-willard/Acts_21_v_24_to_40_ch_22_v_1_to_15_Jun_2_2011.mp3')
+    # t.setTopic()
+    # t.setSpeaker()
+    # t.setMD5Sum()
+    # t.setBook()
+    # t.setChapter()
+    # t.setVerses()
+    # t.setPart()
+    # print(t.__dict__)
 
-    # testing topic with year end
-    print("doing u")
-    u = Message(filename='summer-conference-2007/20070801-WED-1900-SUMMER__CONFERENCE-FINDING_REST_IN_A_WORLD_OF_UNREST-RICHARD_JORDAN.mp3')
-    u.setTopic()
-    u.setSpeaker()
-    u.setMD5Sum()
-    u.setBook()
-    u.setChapter()
-    u.setVerses()
-    u.setPart()
-    print(u.__dict__)
+    # # testing topic with year end
+    # print("doing u")
+    # u = Message(filename='summer-conference-2007/20070801-WED-1900-SUMMER__CONFERENCE-FINDING_REST_IN_A_WORLD_OF_UNREST-RICHARD_JORDAN.mp3')
+    # u.setTopic()
+    # u.setSpeaker()
+    # u.setMD5Sum()
+    # u.setBook()
+    # u.setChapter()
+    # u.setVerses()
+    # u.setPart()
+    # print(u.__dict__)
 
-    # testing topic with year middle
-    print("doing v")
-    v = Message(filename='philippians-2019-series/20210314-PHILIPPIANS_SERIES-PART_97-JOHN_VERSTEGEN-PHILIPPIANS_CH_3_V_17-WHO_TO_FOLLOW_AND_WHO_TO_AVOID.mp3')
-    v.setTopic()
-    v.setSpeaker()
-    v.setDate()
-    v.setMD5Sum()
-    v.setBook()
-    v.setChapter()
-    v.setVerses()
-    v.setPart()
-    print(v.__dict__)
+    # # testing topic with year middle
+    # print("doing v")
+    # v = Message(filename='philippians-2019-series/20210314-PHILIPPIANS_SERIES-PART_97-JOHN_VERSTEGEN-PHILIPPIANS_CH_3_V_17-WHO_TO_FOLLOW_AND_WHO_TO_AVOID.mp3')
+    # v.setTopic()
+    # v.setSpeaker()
+    # v.setDate()
+    # v.setMD5Sum()
+    # v.setBook()
+    # v.setChapter()
+    # v.setVerses()
+    # v.setPart()
+    # print(v.__dict__)
 
-    # testing setBook
-    print("doing w")
-    w = Message(filename='single-message-2/20210620-SUN-1100-THE_LOVE_OF_OUR_FATHER-GARRETT_KAYLOR_LUKE_CH_15_V_11_TO_32.mp3')
-    w.setTopic()
-    w.setSpeaker()
-    w.setDate()
-    w.setMD5Sum()
-    w.setChapter()
-    w.setBook()
-    w.setVerses()
-    w.setPart()
-    print(w.__dict__)
+    # # testing setBook
+    # print("doing w")
+    # w = Message(filename='single-message-2/20210620-SUN-1100-THE_LOVE_OF_OUR_FATHER-GARRETT_KAYLOR_LUKE_CH_15_V_11_TO_32.mp3')
+    # w.setTopic()
+    # w.setSpeaker()
+    # w.setDate()
+    # w.setMD5Sum()
+    # w.setChapter()
+    # w.setBook()
+    # w.setVerses()
+    # w.setPart()
+    # print(w.__dict__)
 
-    # testing setBook
-    print("doing x")
-    x = Message(filename='will-of-god-series/20160518-WED-1900-WILL_OF_GOD_SERIES-PART_4-JOHN_VERSTEGEN_–_1_TIMOTHY_CH_2_V_3_TO_6__WHO_WILL_HAVE_ALL_MEN_TO_BE_SAVED_AND_TO_COME_UNTO_THE_KNOWLEDGE_OF_THE_TRUTH.mp3')
-    x.setTopic()
-    x.setSpeaker()
-    x.setDate()
-    x.setMD5Sum()
-    x.setChapter()
-    x.setBook()
-    x.setVerses()
-    x.setPart()
-    print(x.__dict__)
+    # # testing setBook
+    # print("doing x")
+    # x = Message(filename='will-of-god-series/20160518-WED-1900-WILL_OF_GOD_SERIES-PART_4-JOHN_VERSTEGEN_–_1_TIMOTHY_CH_2_V_3_TO_6__WHO_WILL_HAVE_ALL_MEN_TO_BE_SAVED_AND_TO_COME_UNTO_THE_KNOWLEDGE_OF_THE_TRUTH.mp3')
+    # x.setTopic()
+    # x.setSpeaker()
+    # x.setDate()
+    # x.setMD5Sum()
+    # x.setChapter()
+    # x.setBook()
+    # x.setVerses()
+    # x.setPart()
+    # print(x.__dict__)
 
-    # testing verses with "AND"
-    print("doing y")
-    y = Message(filename='2021-james-series/20210110-JAMES_SERIES-PART_49_JOHN_VERSTEGEN-JAMES_CH_3_V_17_AND_18-WISDOM_FROM_ABOVE.mp3')
-    y.setTopic()
-    y.setSpeaker()
-    y.setDate()
-    y.setMD5Sum()
-    y.setChapter()
-    y.setBook()
-    y.setVerses()
-    y.setPart()
-    print(y.__dict__)
+    # # testing verses with "AND"
+    # print("doing y")
+    # y = Message(filename='2021-james-series/20210110-JAMES_SERIES-PART_49_JOHN_VERSTEGEN-JAMES_CH_3_V_17_AND_18-WISDOM_FROM_ABOVE.mp3')
+    # y.setTopic()
+    # y.setSpeaker()
+    # y.setDate()
+    # y.setMD5Sum()
+    # y.setChapter()
+    # y.setBook()
+    # y.setVerses()
+    # y.setPart()
+    # print(y.__dict__)
 
-    # cornercase 1
-    print("doing z")
-    z = Message(filename='winter-conference-2018/20180217-SAT-0900-WINTER_CONFERENCE_2018-RICK_JORDAN_-_Psalm_Ch._16_Luke_Ch._24_V._5_and_6._The_Message_Of_An_Empty_Tomb.mp3')
-    z.setTopic()
-    z.setSpeaker()
-    z.setDate()
-    z.setMD5Sum()
-    z.setChapter()
-    z.setBook()
-    z.setVerses()
-    z.setPart()
-    print(z.__dict__)
+    # # cornercase 1
+    # print("doing z")
+    # z = Message(filename='winter-conference-2018/20180217-SAT-0900-WINTER_CONFERENCE_2018-RICK_JORDAN_-_Psalm_Ch._16_Luke_Ch._24_V._5_and_6._The_Message_Of_An_Empty_Tomb.mp3')
+    # z.setTopic()
+    # z.setSpeaker()
+    # z.setDate()
+    # z.setMD5Sum()
+    # z.setChapter()
+    # z.setBook()
+    # z.setVerses()
+    # z.setPart()
+    # print(z.__dict__)
     
 
     for mediaFile in MEDIALIST:
