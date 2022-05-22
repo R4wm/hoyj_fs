@@ -16,6 +16,7 @@ speakers = ['alex_kurz', # acts-series-alex-kurz
             'willard' # acts-series--bro-willard
             ]
 
+bookList = ['genesis', 'exodus', 'leviticus', 'numbers', 'deuteronomy', 'joshua', 'judges', 'ruth', '1samuel', '2_samuel', '1_kings', '2_kings', '1_chronicles', '2_chronicles', 'ezra', 'nehemiah', 'esther', 'job', 'psalms', 'proverbs', 'ecclesiastes', 'song of solomon', 'isaiah', 'jeremiah', 'lamentations', 'ezekiel', 'daniel', 'hosea', 'joel', 'amos', 'obadiah', 'jonah', 'micah', 'nahum', 'habakkuk', 'zephaniah', 'haggai', 'zechariah', 'malachi', 'matthew', 'mark', 'luke', 'john', 'acts', 'romans', '1_corinthians', '2_corinthians', 'galatians', 'ephesians', 'philippians', 'colossians', '1_thessalonians', '2_thessalonians', '1_timothy', '2_timothy', 'titus', 'philemon', 'hebrews', 'james', '1_peter', '2_peter', '1_john', '2_john', '3_john', 'jude', 'revelation']
 
 # Make array of MD5sum <-> filename
 MD5TOFILE = []  # contains tuples(md5, filename)
@@ -57,6 +58,7 @@ class Message:
         self.part = ''
         self.verseStart = ''
         self.verseEnd = ''
+        self.outlinefile = ''
 
     def setSpeaker(self):
         if self.speaker != '':
@@ -187,8 +189,18 @@ class Message:
                 self.book = '1 timothy'
             elif '2_timothy' in self.filename:
                 self.book = '2 timothy'
-
-
+        if self.book == 'series':
+            if '1_corinthians' in self.filename:
+                self.book = '1 corinthians'
+        if self.book == 'series':
+            for i in bookList:
+                if i in self.filename.replace('john_verstegen', ''):
+                    self.book = i.replace('_', ' ')
+                    break
+                
+    def shortenfilename(self):
+        if '/' in self.filename:
+            self.filename = self.filename.split('/')[1]
 
 
 # function to identify year, return Y-M-D
@@ -311,6 +323,8 @@ def main():
         a.setBook()
         a.setVerses()
         a.setPart()
+        a.lastMinuteChanges()
+        a.shortenfilename()
         print(json.dumps(a.__dict__, indent=4))
         
 if __name__ == '__main__':
