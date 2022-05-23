@@ -43,21 +43,22 @@ with open("labeling_conf.json") as r:
 
 
 class Message:
+    """the reason we are here"""
     def __init__(self, filename=''):
         self.originalref = filename
         filename = filename.lower()
         self.filename = filename
         self.speaker = ''
-        self.year = ''
-        self.month = ''
-        self.day = ''
+        self.year = None
+        self.month = None
+        self.day = None
         self.topic = ''
         self.md5sum = ''
         self.book = ''
-        self.chapter = ''
-        self.part = ''
-        self.verseStart = ''
-        self.verseEnd = ''
+        self.chapter = None
+        self.part = None
+        self.verseStart = None
+        self.verseEnd = None
         self.outlinefile = ''
 
     def setSpeaker(self):
@@ -119,13 +120,13 @@ class Message:
         checkAgainst = self.filename.split('/')[1]
         foundChapter = re.match(r'(.*)(_ch_)(\d{1,3})', checkAgainst)
         if foundChapter:
-            if self.chapter == '':
+            if self.chapter is None:
                 self.chapter = int(foundChapter.group(3))
                 return
         cornerCase1 = re.match(r'(.*-_)([a-z]+)(_ch\._)(\d{1,3})', checkAgainst)
         if cornerCase1:
-            if self.chapter == '':
-                self.chapter = cornerCase1.group(4)
+            if self.chapter is None:
+                self.chapter = int(cornerCase1.group(4))
 
 
     def setBook(self):
@@ -156,32 +157,35 @@ class Message:
         # luke_ch_15_v_11_to_32.mp3
         foundVerses = re.match(r'(.*)(_ch_\d{1,3})(_)(v_)(\d{1,3})(_\w{1,3}_)(\d{1,3})', checkAgainst)
         if foundVerses:
-            if self.verseStart == '' and self.verseEnd == '':
+            if self.verseStart is None and self.verseEnd is None:
                 self.verseStart = int(foundVerses.group(5))
                 self.verseEnd = int(foundVerses.group(7))
                 return
         # handle single verse ex: john_verstegen-philippians_ch_3_v_17-who_to_follow_and_who_to_avoid.mp3
         foundVerse = re.match(r'(.*)(_ch_\d{1,3})(_)(v_)(\d{1,3})([-_].*)', checkAgainst)
         if foundVerse:
-            if self.verseStart == '':
+            if self.verseStart is None:
                 self.verseStart = int(foundVerse.group(5))
                 return
         # cornerCase1 = re.match(r'(.*-_)([a-z]+)(_ch\._)(\d{1,3})', checkAgainst)
         # if cornerCase1:
         #     import pdb;pdb.set_trace()
 
+
     def setPart(self):
         checkAgainst = self.filename.split('/')[1]
         foundPart = re.match(r'(.*[_-]part_)(\d{1,3})', checkAgainst)
         if foundPart:
-            if self.part == '':
+            if self.part is None:
                 self.part = int(foundPart.group(2))
                 return
         cornerCase1 = re.match(r'(.*)(_pt_)(\d{1,3})([-_])', checkAgainst)
         if cornerCase1:
-            if self.part == '':
+            if self.part is None:
                 self.part = int(cornerCase1.group(3))
                 return
+        # default
+        self.part = None
 
     def lastMinuteChanges(self):
         if self.book == 'timothy':
@@ -197,7 +201,7 @@ class Message:
                 if i in self.filename.replace('john_verstegen', ''):
                     self.book = i.replace('_', ' ')
                     break
-                
+
     def shortenfilename(self):
         if '/' in self.filename:
             self.filename = self.filename.split('/')[1]
@@ -311,8 +315,8 @@ def main():
     # z.setVerses()
     # z.setPart()
     # print(z.__dict__)
-    
 
+    result = []
     for mediaFile in MEDIALIST:
         a = Message(filename=mediaFile)
         a.setTopic()
@@ -326,6 +330,12 @@ def main():
         a.lastMinuteChanges()
         a.shortenfilename()
         print(json.dumps(a.__dict__, indent=4))
-        
+        result.append(a.__dict__)
+
+    # write the result to file
+    with open('/tmp/result.json', 'w') as w:
+        w.write(json.dumps(result, indent=4))
+
+
 if __name__ == '__main__':
     main()
