@@ -68,28 +68,25 @@ func (m *Message) getSpeaker(existing *[]Message) {
 		log.Fatal("well who spoke then?")
 	}
 	// check that the speaker already exists..
-	speakerFound := false
 	for _, v := range *existing {
 		if v.Speaker == speakerCandidate {
 			log.Printf("found speaker: %s\n", v.Speaker)
-			speakerFound = true
 			m.Speaker = speakerCandidate
 			return
 		}
 	}
-	if !speakerFound {
-		fmt.Printf("%s does not exist.. are you sure you want to create this speaker? [y/n] ", speakerCandidate)
-		var answer string
-		fmt.Scanf("%s", &answer)
-		fmt.Println("answer: ", answer)
-		if strings.ToLower(answer) == "y" {
-			fmt.Println("ok you got it")
-			m.Speaker = speakerCandidate
-		} else {
-			fmt.Println("aborting")
-			os.Exit(0)
-		}
+	fmt.Printf("%s does not exist.. are you sure you want to create this speaker? [y/n] ", speakerCandidate)
+	var answer string
+	fmt.Scanf("%s", &answer)
+	fmt.Println("answer: ", answer)
+	if strings.ToLower(answer) == "y" {
+		fmt.Println("ok you got it")
+		m.Speaker = speakerCandidate
+	} else {
+		fmt.Println("aborting")
+		os.Exit(0)
 	}
+
 }
 
 func (m *Message) setFileName(existing *[]Message) {
@@ -133,12 +130,42 @@ func (m *Message) setMD5Sum() {
 	// check if the md5 already exists??
 }
 
+func (m *Message) setTopic(existing *[]Message) {
+	log.Println("running setTopic")
+	// Taking input from user
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	topicCandidate := scanner.Text()
+	if topicCandidate == "" {
+		log.Fatal("topic name required, even if its \"misc\"")
+	}
+	// check that the topic already exists..
+	for _, v := range *existing {
+		if v.Topic == topicCandidate {
+			log.Printf("found topic: %s\n", v.Topic)
+			m.Topic = topicCandidate
+			return
+		}
+	}
+	fmt.Printf("%s does not exist.. are you sure you want to create this topic? [y/n] ", topicCandidate)
+	var answer string
+	fmt.Scanf("%s", &answer)
+	fmt.Println("answer: ", answer)
+	if strings.ToLower(answer) == "y" {
+		fmt.Println("ok you got it")
+		m.Topic = topicCandidate
+	} else {
+		fmt.Println("aborting")
+		os.Exit(0)
+	}
+}
+
 func main() {
 	existing := pullExisting()
 	m := Message{}
 	m.setFileName(&existing)
 	m.setMD5Sum()
 	m.getSpeaker(&existing)
-
+	m.setTopic(&existing)
 	fmt.Printf("final result: %#v\n", m)
 }
