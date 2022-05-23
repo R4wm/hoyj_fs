@@ -214,6 +214,30 @@ func (m *Message) setMonth() {
 	m.Month = holder
 }
 
+func (m *Message) setDay() {
+	log.Println("running setDay")
+	t := time.Now()
+	day := t.Day()
+	// Taking input from user
+	fmt.Printf("If %d ok, press enter, else enter the day: ", day)
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	dayCandidate := scanner.Text()
+	if dayCandidate == "" {
+		log.Printf("using day: %s\n", day)
+		m.Day = int(t.Day())
+		return
+	}
+	holder, err := strconv.Atoi(dayCandidate)
+	if err != nil {
+		log.Fatalf("%s is not a day")
+	}
+	if holder > 31 || holder < 1 {
+		log.Fatalf("invalid day: %d", holder)
+	}
+	m.Day = holder
+}
+
 func main() {
 	existing := pullExisting()
 	m := Message{}
@@ -224,5 +248,6 @@ func main() {
 	_ = existing
 	m.setYear()
 	m.setMonth()
+	m.setDay()
 	fmt.Printf("final result: %#v\n", m)
 }
