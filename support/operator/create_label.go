@@ -11,7 +11,9 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
+	"time"
 )
 
 // Message the json output for label
@@ -160,12 +162,41 @@ func (m *Message) setTopic(existing *[]Message) {
 	}
 }
 
+func (m *Message) setYear() {
+	log.Println("running setYear")
+	t := time.Now()
+	year := t.Year()
+	// Taking input from user
+	fmt.Printf("If %d ok, press enter, else enter the year: ", year)
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	yearCandidate := scanner.Text()
+	if yearCandidate == "" {
+		log.Printf("using year: %s\n", year)
+		m.Year = year
+		return
+	}
+	holder, err := strconv.Atoi(yearCandidate)
+	if err != nil {
+		log.Fatal("%s is not a year")
+	}
+	if holder > 2050 {
+		log.Fatal("lol we havent been raptured by 2050?")
+	}
+	if holder < 1984 {
+		log.Fatal("Thats too old? right?")
+	}
+	m.Year = holder
+
+}
 func main() {
 	existing := pullExisting()
 	m := Message{}
-	m.setFileName(&existing)
-	m.setMD5Sum()
-	m.getSpeaker(&existing)
-	m.setTopic(&existing)
+	// m.setFileName(&existing)
+	// m.setMD5Sum()
+	// m.getSpeaker(&existing)
+	// m.setTopic(&existing)
+	_ = existing
+	m.setYear()
 	fmt.Printf("final result: %#v\n", m)
 }
