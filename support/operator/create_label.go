@@ -189,6 +189,31 @@ func (m *Message) setYear() {
 	m.Year = holder
 
 }
+
+func (m *Message) setMonth() {
+	log.Println("running setMonth")
+	t := time.Now()
+	month := t.Month()
+	// Taking input from user
+	fmt.Printf("If %d ok, press enter, else enter the month: ", month)
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	monthCandidate := scanner.Text()
+	if monthCandidate == "" {
+		log.Printf("using month: %s\n", month)
+		m.Month = int(t.Month())
+		return
+	}
+	holder, err := strconv.Atoi(monthCandidate)
+	if err != nil {
+		log.Fatalf("%s is not a month")
+	}
+	if holder > 12 || holder < 1 {
+		log.Fatalf("invalid month: %d", holder)
+	}
+	m.Month = holder
+}
+
 func main() {
 	existing := pullExisting()
 	m := Message{}
@@ -198,5 +223,6 @@ func main() {
 	// m.setTopic(&existing)
 	_ = existing
 	m.setYear()
+	m.setMonth()
 	fmt.Printf("final result: %#v\n", m)
 }
