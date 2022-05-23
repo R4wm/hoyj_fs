@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"crypto/md5"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -71,7 +73,8 @@ func (m *Message) getSpeaker(existing *[]Message) {
 		if v.Speaker == speakerCandidate {
 			log.Printf("found speaker: %s\n", v.Speaker)
 			speakerFound = true
-			break
+			m.Speaker = speakerCandidate
+			return
 		}
 	}
 	if !speakerFound {
@@ -89,9 +92,53 @@ func (m *Message) getSpeaker(existing *[]Message) {
 	}
 }
 
+func (m *Message) setFileName(existing *[]Message) {
+	fmt.Println("filepath: ")
+	s := bufio.NewScanner(os.Stdin)
+	s.Scan()
+	filepath := s.Text()
+	info, err := os.Stat(filepath)
+	if os.IsNotExist(err) {
+		log.Fatalf("%s not exists", filepath)
+	}
+	if info.IsDir() {
+		log.Fatalf("%s is a directory not a file.", filepath)
+	}
+	// check if duplicate
+	// break down to just filename
+	log.Println("checking for duplicate filename")
+	basepath := strings.Split(filepath, "/")
+	for _, v := range *existing {
+		if v.FileName == basepath[len(basepath)-1] {
+			log.Fatalf("%s is duplicate filename, change filename and try again", basepath)
+		}
+	}
+	// md5sum the file
+	m.FileName = filepath
+
+}
+
+func (m *Message) setMD5Sum() {
+	log.Println("running setMD5Sum")
+	f, err := os.Open(m.FileName)
+	if err != nil {
+		log.Fatal("Failed to read (want to md5sum) %s", m.FileName)
+	}
+	defer f.Close()
+	h := md5.New()
+	if _, err := io.Copy(h, f); err != nil {
+		log.Fatalf("Failed md5sum %s", m.FileName)
+	}
+	m.Md5Sum = fmt.Sprintf("%x", h.Sum(nil))
+	// check if the md5 already exists??
+}
+
 func main() {
 	existing := pullExisting()
 	m := Message{}
+	m.setFileName(&existing)
+	m.setMD5Sum()
 	m.getSpeaker(&existing)
+
 	fmt.Printf("final result: %#v\n", m)
 }
