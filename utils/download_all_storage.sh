@@ -3,7 +3,7 @@ set -e
 ###############################
 # Just downloading everything #
 ###############################
-destination=~/media/hoyj/
+destination=/mnt/sda/hoyj
 for i in $(cat ./medialist.txt)
 do
     subject=$(echo $i | cut -f1 -d'/')

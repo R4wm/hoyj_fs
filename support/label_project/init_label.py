@@ -330,6 +330,9 @@ def main():
         a.lastMinuteChanges()
         a.shortenfilename()
         print(json.dumps(a.__dict__, indent=4))
+        f = open('./label_output/' + a.__dict__['filename']+'.json', 'w')
+        f.write(json.dumps(a.__dict__, indent=4))
+        f.close()
         result.append(a.__dict__)
 
     # write the result to file
