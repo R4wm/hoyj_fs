@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<head>
+  <style>
+    label {
+    display: block;
+    font: 1rem 'Fira Sans', sans-serif;
+    }
+
+    input,
+    label {
+    margin: .4rem 0;
+    }
+  </style>
+  <p> Uploads Media to our Storage</p>
+  <b> Do NOT use punctuation marks, just letters and numbers</b>
+  
+</head>
+<body>
+  <div id="demo">
+  <p>Series Name</p>  
+  <input type="text" id="seriesName" placeholder="Series">
+  <p>Date</p>  
+  <input type="text" id="date" placeholder="20220514">
+  <p>Speaker</p>  
+  <input type="text" id="speakerName" placeholder="John Verstegen">
+  <p>Title</p>
+  <input type="text" id="titleName" placeholder="">  
+  <hr></hr>
+  <p>Book</p>  
+  <input type="text" id="bookName1" placeholder="Genesis">
+  <p>Start Chapter</p>  
+  <input type="text" id="startChapterName1" placeholder="0">
+  <p>End Chapter</p>  
+  <input type="text" id="endChapterName1" placeholder="0">
+  <p>Start Verse<p>
+  <input type="text" id="startChapterName1" placeholder="0">  
+  <p>End Verse</p>
+  <input type="text" id="startChapterName1" placeholder="0">
+  <hr></hr>
+  <p>Book</p>  
+  <input type="text" id="bookName2" placeholder="Genesis">
+  <p>Start Chapter</p>  
+  <input type="text" id="startChapterName2" placeholder="0">
+  <p>End Chapter</p>  
+  <input type="text" id="endChapterName2" placeholder="0">
+  <p>Start Verse<p>
+  <input type="text" id="startChapterName2" placeholder="0">  
+  <p>End Verse</p>
+  <input type="text" id="startChapterName2" placeholder="0">
+  <p></p>
+  <hr></hr>  
+  <label for="media_file">Choose Media File:</label>
+  <input type="file"
+         id="avatar" name="media_file"
+         accept=".mp3,.mp4,audio/*">
+  <button id="saveBtn">Save</button>
+  </div>
+  <!---------------------------->
+  <!-- Handle file name stuff -->
+  <!---------------------------->
+  <script >
+    let filename = "";
+    const saveHandle = document.getElementById('saveBtn');
+    const speakerHandle = document.getElementById('speakerName');
+    const fs = require('fs');
+    fs.copyFile('something', 'else', (err) =>{
+      if(err) throw err;
+      console.log("error: ", err);
+    });
+    // document.getElementById("demo").innerHTML = "Hello JavaScript!";
+  
+  saveHandle.addEventListener('click', function(){
+    console.log(speakerHandle.value);
+    if (speakerHandle.value == ""){
+      console.log("no speakerName");
+    }else{
+      filename = filename.concat(`speaker.${speakerHandle.value}`);
+      filename = filename.replace(" ", "_");
+    }
+    // handle file copy
+    const selectedFile = document.getElementById('media_file').value;
+    console.log("selected file: ", selectedFile);    
+    console.log(`filename: ${filename}`);
+    console.log("filename is: ", filename);
+  })
+  
+  </script>  
+</body>
+
+</html>
