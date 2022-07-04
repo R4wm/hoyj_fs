@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import json
 import re
+import os.path
+import hashlib
 
 # create static speaker list
 speakers = ['alex_kurz', # acts-series-alex-kurz
@@ -46,8 +48,8 @@ class Message:
     """the reason we are here"""
     def __init__(self, filename=''):
         self.originalref = filename
-        filename = filename.lower()
-        self.filename = filename
+        # filename = filename.lower()
+        self.filename = filename.lower()
         self.speaker = ''
         self.year = None
         self.month = None
@@ -72,6 +74,7 @@ class Message:
         if '/' not in self.filename:
             print("skipping, no slash found in filename")
             return
+        # import pdb;pdb.set_trace()
         topic = self.filename.split('/')[0]
         if topic == 'acts-series--bro-willard':
             self.topic = 'acts-series'
@@ -94,6 +97,9 @@ class Message:
             self.topic = topic
             self.chapter = 15
             return
+        if topic == '1corinthians-series':
+            self.book = "1corinthians"
+            return
         startswithyear = re.match(r'(\d{4})(-)(.*)', topic)
         if startswithyear:
             if self.topic == '':
@@ -110,11 +116,18 @@ class Message:
             self.day = int(foundDate.group(2)[6:])
 
     def setMD5Sum(self):
-        for i in MD5TOFILE:
-            checkAgainst = self.filename.split('/')[1]
-            if i[1] == checkAgainst:
-                self.md5sum = i[0]
-                return
+        pathname = '/var/www/html/helpersofyourjoy/storage/media/' + self.originalref
+        if not os.path.exists(pathname):
+            self.md5 = '{} does not exist'.format(pathname)
+            return
+        
+        self.md5sum = hashlib.md5(open(pathname, 'rb').read()).hexdigest()
+        # import pdb;pdb.set_trace()
+        # for i in MD5TOFILE:
+        #     checkAgainst = self.filename.split('/')[1]
+        #     if i[1] == checkAgainst:
+        #         self.md5sum = i[0]
+        #         return
 
     def setChapter(self):
         checkAgainst = self.filename.split('/')[1]
@@ -132,6 +145,7 @@ class Message:
     def setBook(self):
         checkAgainst = self.filename.split('/')[1]
         foundBook = re.match(r'(.*[-_])(.*)(_ch_\d{1,3})', checkAgainst)
+        # import pdb;pdb.set_trace()
         if foundBook:
             if self.book == '':
                 self.book = foundBook.group(2)
@@ -149,7 +163,7 @@ class Message:
                       '1_thessalonians', '2_thessalonians', '1_peter', '2_peter',
                       '1_john', '2_john', '3_john']:
                 if i in self.filename:
-                    self.book = i.replace('_', ' ')
+                    self.book = i.replace('_', '')
                     return
 
     def setVerses(self):
@@ -205,6 +219,13 @@ class Message:
     def shortenfilename(self):
         if '/' in self.filename:
             self.filename = self.filename.split('/')[1]
+
+
+    def setURL(self):
+        if self.originalref == "":
+            return
+        self.URL = 'https://helpersofyourjoy.com/storage/media/' + self.originalref
+        return
 
 
 # function to identify year, return Y-M-D
@@ -277,8 +298,7 @@ def main():
     # w.setPart()
     # print(w.__dict__)
 
-    # # testing setBook
-    # print("doing x")
+    # testing setBook
     # x = Message(filename='will-of-god-series/20160518-WED-1900-WILL_OF_GOD_SERIES-PART_4-JOHN_VERSTEGEN_–_1_TIMOTHY_CH_2_V_3_TO_6__WHO_WILL_HAVE_ALL_MEN_TO_BE_SAVED_AND_TO_COME_UNTO_THE_KNOWLEDGE_OF_THE_TRUTH.mp3')
     # x.setTopic()
     # x.setSpeaker()
@@ -288,7 +308,7 @@ def main():
     # x.setBook()
     # x.setVerses()
     # x.setPart()
-    # print(x.__dict__)
+    # print(json.dumps(x.__dict__, indent=4))
 
     # # testing verses with "AND"
     # print("doing y")
@@ -303,7 +323,7 @@ def main():
     # y.setPart()
     # print(y.__dict__)
 
-    # # cornercase 1
+    # cornercase 1
     # print("doing z")
     # z = Message(filename='winter-conference-2018/20180217-SAT-0900-WINTER_CONFERENCE_2018-RICK_JORDAN_-_Psalm_Ch._16_Luke_Ch._24_V._5_and_6._The_Message_Of_An_Empty_Tomb.mp3')
     # z.setTopic()
@@ -314,7 +334,8 @@ def main():
     # z.setBook()
     # z.setVerses()
     # z.setPart()
-    # print(z.__dict__)
+    # z.setURL()
+    # print(json.dumps(z.__dict__, indent=4))
 
     result = []
     for mediaFile in MEDIALIST:
@@ -329,8 +350,9 @@ def main():
         a.setPart()
         a.lastMinuteChanges()
         a.shortenfilename()
+        a.setURL()
         print(json.dumps(a.__dict__, indent=4))
-        f = open('./label_output/' + a.__dict__['filename']+'.json', 'w')
+        f = open('/var/www/html/helpersofyourjoy/storage/labels/' + a.__dict__['filename']+'.json', 'w')
         f.write(json.dumps(a.__dict__, indent=4))
         f.close()
         result.append(a.__dict__)
@@ -340,5 +362,33 @@ def main():
         w.write(json.dumps(result, indent=4))
 
 
+import argparse
+
+parser = argparse.ArgumentParser(description="create label")
+parser.add_argument('--mediafile', help="absolute path to media file" , type=str)
+args = parser.parse_args()
+
 if __name__ == '__main__':
-    main()
+    if args.mediafile == None:
+        main()
+    else:
+        dirn = args.mediafile.split('/')[-2]
+        fn = args.mediafile.split('/')[-1]
+        a = Message(filename='/'.join([dirn, fn]))
+        a.setTopic()
+        a.setSpeaker()
+        a.setDate()
+        a.setMD5Sum()
+        a.setChapter()
+        a.setBook()
+        a.setVerses()
+        a.setPart()
+        a.lastMinuteChanges()
+        a.shortenfilename()
+        a.setURL()
+        print(json.dumps(a.__dict__, indent=4))
+        writePath = '/var/www/html/helpersofyourjoy/storage/labels/' + a.__dict__['filename']+'.json'
+        f = open(writePath, 'w')
+        f.write(json.dumps(a.__dict__, indent=4))
+        f.close()
+        print("wrote: {}".format(writePath))

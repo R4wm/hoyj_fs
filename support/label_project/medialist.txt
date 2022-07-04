@@ -4679,7 +4679,6 @@ collective/video1074345891.mp4
 collective/video1074345891.mp4.json
 colossians-2022/20220605-john_verstegen-colossians-part_3-colosssians_ch_1_v_1_to_6-assurance
 colossians-2022/20220612-colossians-part_4-john_verstegen-colossians_ch_1_v_1_to_6-out_of_darkness.mp3
-colossians-2022/20220626-colossians-part_5-john_verstegen-colossians_ch_1_v_1_to_4-the_liberating_light_of_the_gospel.mp3
 colossians-2022/date.20220522.speaker.john_verstegen.title.colossians.part.1.book.colossians.chapter.1.verse.1_to_8.subtitle.introduction.mp3
 colossians-2022/date.20220529.speaker.john_verstegen.title.colossians.part.2.book.colossians.chapter.1.verse.1_to_8.subtitle.the_pre-eminate_one.mp3
 colossians-series/20070317-SAT-1900-COLOSSIANS_SERIES-INTRODUCTION-JOHN_VERSTEGEN.mp3
@@ -6595,7 +6594,6 @@ right-division-and-the-gospels-series/20220426-RIGHT_DIVISION_AND_THE_GOSPELS-PA
 right-division-and-the-gospels-series/20220503-RIGHT_DIVISION_AND_THE_GOSPELS-PART_166-JOHN_VERSTEGEN-JOHN_CH_19_V_25_TO_27-WOMAN_BEHOLD_THY_SON.mp3
 right-division-and-the-gospels-series/20220517-RIGHT_DIVISION_AND_THE_GOSPELS-PART_167-JOHN_VERSTEGEN-MATTHEW_CH_27_V_45_AND_46-FORSAKEN_AND_ALONE.mp3
 right-division-and-the-gospels-series/20220607-right_division_and_the_gospels-part_170-john_verstegen-matthew_ch_27_v_50_to_54-the_renting_of_the_veil.mp3
-right-division-and-the-gospels-series/20220614-right_division_and_the_gospels-part_171-john_verstegen-matthew_ch_27_v_50_to_61-the_quaking_earth.mp3
 right-division-and-the-gospels-series/date.20220524.speaker.john_verstegen.title.right_division_and_the_gospels.part.168.book.john.chapter.19.verse.28_to_30.subtitle.i_thirst.mp3
 right-division-and-the-gospels-series/date.20220531.speaker.john_verstegen.title.right_division_and_the_gospels.part.169.book.john.chapter.19.verse.30.subtitle.it_is_finished.mp3
 rightly-dividing-series-2005/20050123-SUN-1100-RIGHTLY_DIVIDING_SERIES-2_TIMOTHY_CH_2_V_15-JOHN_VERSTEGEN.mp3
@@ -7204,9 +7202,6 @@ single-message-2/20220417-THE_EMPTY_TOMB-JOHN_VERSTEGEN-MATTHEW_CH_27_V_57_TO_66
 single-message-2/20220424-ACTS_OVERVIEW-TOM_MEIER-ACTS_CH_1_TO_13.mp3
 single-message-2/20220424-I_TELL_YOU_THE_TRUTH-HENRY_MENESES-GALATIANS_CH_4_V_13_TO_18.mp3
 single-message-2/20220508-THE_ANCIENT_LANDMARKS-JOHN_VERSTEGEN-PROVERBS_CH_22_V_28.mp3
-single-message-2/20220619-our_blessed_hope-tom_meier-titus_ch_2_v_11_to_15.mp3
-single-message-2/20220619-the_fall_of_israel-rich_davis-romans_ch_11_v_11.mp3
-single-message-2/20220626-the_fall_of_israel_continued-rich_davis-romans_ch_11_v_11.mp3
 single-messages/20041031-SUN-1100-HALLOWEEN-GREAT_HAUNTED_HOUSE_OF_BIBLE-JOHN_VERSTEGEN.mp3
 single-messages/20050116-SUN-1100-BUT_WAIT_IM_ALREADY_COMPLETE_IN_CHRIST-JOHN_VERSTEGEN.mp3
 single-messages/20050204-FRI-1900-WINTER_CONFERENCE-RIGHTLY_DIVIDING-JOHN_VERSTEGEN.mp3
