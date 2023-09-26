@@ -10,7 +10,14 @@ do
     echo "working on $i"
     for j in $(linode-cli obj ls $i | awk '{print $4}')
     do
-        echo "$i/$j" >> "$TEMP"
+        # ignore json files
+        if [[ $j =~ .*.json ]]
+        then
+            echo skipping $j
+        else
+            echo "$i/$j" >> "$TEMP"
+        fi
+        
     done
 done
 
