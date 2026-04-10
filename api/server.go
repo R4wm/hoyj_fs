@@ -19,89 +19,289 @@ var (
 )
 
 const chapterTemplate = `
-<html>
-<title>{{.Name}}</title>
-<style>
-.btn-group button {
-  background-color: gold; /* Green background */
-  border: 1px solid green; /* Green border */
-  color: black;
-  padding: 10px 24px; /* Some padding */
-  cursor: pointer; /* Pointer/hand icon */
-  float: center; /* Float the buttons side by side */
-}
-/* Clear floats (clearfix hack) */
-.btn-group:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-.btn-group button:not(:last-child) {
-  border-right: none; /* Prevent double borders */
-}
-/* Add a background color on hover */
-.btn-group button:hover {
-  background-color: #3e8e41;
-}
-</style>
-  <body style="background-color:{{ .Color }};">
-    <h1><center><a href=https://helpersofyourjoy.com/media>{{ .Name }}</a></h1>
-  <body>
-    {{ range $index, $results := .Series }}
-    <p><b><left><a href={{ $results }}> {{ createLink $results }}</a>  </b></p>
-    {{ end }}
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <div class="w3-bar">
-    <div class="btn-group">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Name}} - Helpers of Your Joy</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .wrapper { max-width: 800px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { color: white; font-size: 2rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+    header a:hover { text-decoration: underline; }
+    .content-box {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .file-list { list-style: none; }
+    .file-list li {
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: #f8f9fa;
+      transition: all 0.2s;
+    }
+    .file-list li:hover { background: #e9ecef; transform: translateX(4px); }
+    .file-list a {
+      color: #333;
+      text-decoration: none;
+      display: block;
+      word-break: break-word;
+    }
+    .file-list a:hover { color: #667eea; }
+    footer { text-align: center; margin-top: 30px; color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+    footer a { color: white; text-decoration: none; font-weight: 500; }
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1><a href="https://helpersofyourjoy.com">Helpers of Your Joy</a></h1>
+    </header>
+    <div class="content-box">
+      <a href="/media" class="back-link">← Back to Series</a>
+      <h2 style="margin-bottom: 20px; color: #333;">{{ .Name }}</h2>
+      <ul class="file-list">
+        {{ range $index, $results := .Series }}
+        <li><a href="{{ $results }}">{{ createLink $results }}</a></li>
+        {{ end }}
+      </ul>
     </div>
-  </body>
+    <footer>
+      <a href="/mp3/form.html">Search MP3 Library</a> · <a href="/media">Browse Series</a>
+    </footer>
+  </div>
+</body>
 </html>
 `
 
 const tpl = `
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>{{.Title}}</title>
-	</head>
-	<body>
-		{{range .Items}}<p><a href="{{ . }}">{{ basenameMP3Files . }}</a></p>{{else}}<div><strong>no rows</strong></div>{{end}}
-	</body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{.Title}} - Helpers of Your Joy</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .wrapper { max-width: 800px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { color: white; font-size: 2rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+    .content-box {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #667eea;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .back-link:hover { text-decoration: underline; }
+    .results-count { color: #666; margin-bottom: 16px; }
+    .file-list { list-style: none; max-height: 600px; overflow-y: auto; }
+    .file-list li {
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      background: #f8f9fa;
+      transition: all 0.2s;
+    }
+    .file-list li:hover { background: #e9ecef; transform: translateX(4px); }
+    .file-list a {
+      color: #333;
+      text-decoration: none;
+      display: block;
+      word-break: break-word;
+    }
+    .file-list a:hover { color: #667eea; }
+    .no-results { text-align: center; padding: 40px; color: #888; }
+    footer { text-align: center; margin-top: 30px; color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+    footer a { color: white; text-decoration: none; font-weight: 500; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1><a href="https://helpersofyourjoy.com">Helpers of Your Joy</a></h1>
+    </header>
+    <div class="content-box">
+      <a href="/mp3/form.html" class="back-link">← New Search</a>
+      <h2 style="margin-bottom: 10px; color: #333;">Search Results</h2>
+      {{if .Items}}
+      <p class="results-count">Found {{len .Items}} result{{if ne (len .Items) 1}}s{{end}}</p>
+      <ul class="file-list">
+        {{range .Items}}<li><a href="{{ . }}" target="_blank">{{ basenameMP3Files . }}</a></li>{{end}}
+      </ul>
+      {{else}}
+      <div class="no-results">No results found. Try different keywords.</div>
+      {{end}}
+    </div>
+    <footer>
+      <a href="/mp3/form.html">Search</a> · <a href="/media">Browse Series</a>
+    </footer>
+  </div>
+</body>
 </html>`
 
 const chapterButtonsTemplate = `
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-      .block {
-      display: block;
-      width: 100%;
-      border: none;
-      background-color: #4CAF50;
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Media Library - Helpers of Your Joy</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .wrapper { max-width: 900px; margin: 0 auto; }
+    header { text-align: center; margin-bottom: 30px; }
+    header h1 { color: white; font-size: 2rem; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+    header a:hover { text-decoration: underline; }
+    .search-bar {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 12px 16px;
+      font-size: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      outline: none;
+    }
+    .search-bar input:focus { border-color: #667eea; }
+    .search-bar a {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
-      padding: 14px 28px;
-      font-size: 16px;
-      cursor: pointer;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .search-bar a:hover { opacity: 0.9; }
+    .content-box {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    .series-count { color: #666; margin-bottom: 20px; }
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
+      list-style: none;
+    }
+    .series-grid li a {
+      display: block;
+      padding: 16px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 500;
       text-align: center;
-      }
-      .block:hover {
-      background-color: #ddd;
-      color: black;
-      }
-    </style>
-    <title>{{ .Name }}</title>
-  </head>
-  <body style="background-color:{{ .Color }};">
-    <p><center><h1> {{ .Name }} </h1><center></p>
-    <button onclick="window.location.href='https://helpersofyourjoy.com';" class="w3-bar-item w3-button" style="width:33.3%">Return to helpersofyourjoy.com</button>
-    {{ range $index, $results := .Series }}
-    <p><button class="block" onclick="window.location.href = '{{ add "./media/" $results }}'">{{ $results }}</button></p>
-    {{ end }}
-  </body>
+      transition: all 0.2s;
+      font-size: 0.9rem;
+    }
+    .series-grid li a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+    footer { text-align: center; margin-top: 30px; color: rgba(255,255,255,0.8); font-size: 0.9rem; }
+    footer a { color: white; text-decoration: none; font-weight: 500; }
+    footer a:hover { text-decoration: underline; }
+    @media (max-width: 600px) {
+      .search-bar { flex-direction: column; }
+      .search-bar a { width: 100%; text-align: center; }
+      .series-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1><a href="https://helpersofyourjoy.com">Helpers of Your Joy</a></h1>
+    </header>
+    <div class="search-bar">
+      <input type="text" id="filterInput" placeholder="Filter series..." onkeyup="filterSeries()">
+      <a href="/mp3/form.html">Search MP3s</a>
+    </div>
+    <div class="content-box">
+      <h2 style="margin-bottom: 10px; color: #333;">Media Library</h2>
+      <p class="series-count" id="seriesCount">{{ len .Series }} series available</p>
+      <ul class="series-grid" id="seriesList">
+        {{ range $index, $results := .Series }}
+        <li><a href="{{ add "./media/" $results }}">{{ $results }}</a></li>
+        {{ end }}
+      </ul>
+    </div>
+    <footer>
+      <a href="https://helpersofyourjoy.com">Home</a> · <a href="/mp3/form.html">Search</a>
+    </footer>
+  </div>
+  <script>
+    function filterSeries() {
+      const filter = document.getElementById('filterInput').value.toLowerCase();
+      const items = document.querySelectorAll('#seriesList li');
+      let visible = 0;
+      items.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(filter)) {
+          item.style.display = '';
+          visible++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+      document.getElementById('seriesCount').textContent = visible + ' series' + (filter ? ' matching "' + filter + '"' : ' available');
+    }
+  </script>
+</body>
 </html>
 `
 
