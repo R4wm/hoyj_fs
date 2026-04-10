@@ -51,6 +51,10 @@ WantedBy=multi-user.target
 SERVICEEOF
 
 echo "==> Service file created at /home/r4wm/hoyj-api.service"
+
+echo "==> Deploying html files..."
+sudo cp /home/r4wm/github/hoyj_fs/html/form.html /var/www/html/helpersofyourjoy/mp3/form.html
+echo "==> HTML files deployed"
 ENDSSH
 
 echo ""
