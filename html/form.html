@@ -1,64 +1,324 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {font-family: Arial, Helvetica, sans-serif;}
-* {box-sizing: border-box;}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MP3 Library Search - Helpers of Your Joy</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-input[type=text], select, textarea {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-  margin-top: 6px;
-  margin-bottom: 16px;
-  resize: vertical;
-}
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
 
-input[type=submit] {
-  background-color: #04AA6D;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
+    .wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+    }
 
-input[type=submit]:hover {
-  background-color: #45a049;
-}
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-.container {
-  border-radius: 5px;
-  background-color: #f2f2f2;
-  padding: 20px;
-}
-</style>
+    header h1 {
+      color: white;
+      font-size: 2rem;
+      font-weight: 300;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    header a {
+      color: rgba(255,255,255,0.9);
+      text-decoration: none;
+    }
+
+    header a:hover {
+      text-decoration: underline;
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .search-form {
+      display: flex;
+      gap: 12px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 16px 20px;
+      font-size: 1.1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    .search-btn {
+      padding: 16px 32px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .search-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .search-btn:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .hint {
+      margin-top: 12px;
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .results-section {
+      margin-top: 24px;
+      display: none;
+    }
+
+    .results-section.active {
+      display: block;
+    }
+
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .results-count {
+      font-size: 0.95rem;
+      color: #666;
+    }
+
+    .results-list {
+      list-style: none;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .results-list li {
+      padding: 12px 16px;
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+
+    .results-list li:hover {
+      background-color: #f5f5f5;
+    }
+
+    .results-list a {
+      color: #333;
+      text-decoration: none;
+      display: block;
+      word-break: break-word;
+    }
+
+    .results-list a:hover {
+      color: #667eea;
+    }
+
+    .results-list .filename {
+      font-weight: 500;
+    }
+
+    .results-list .path {
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 4px;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px;
+      color: #888;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #667eea;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      border: 3px solid #e0e0e0;
+      border-top-color: #667eea;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 600px) {
+      .search-form {
+        flex-direction: column;
+      }
+
+      .search-btn {
+        width: 100%;
+      }
+
+      header h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="wrapper">
+    <header>
+      <h1><a href="https://helpersofyourjoy.com">Helpers of Your Joy</a></h1>
+    </header>
 
-<h3>search mp3 library</h3>
+    <div class="search-box">
+      <form class="search-form" id="searchForm">
+        <input
+          type="text"
+          class="search-input"
+          id="searchInput"
+          name="q"
+          placeholder="Search MP3 library... (e.g., 2021 right division)"
+          autocomplete="off"
+        >
+        <button type="submit" class="search-btn" id="searchBtn">Search</button>
+      </form>
+      <p class="hint">Enter keywords separated by spaces to filter results</p>
 
-<div class="container">
-  <form action="../mp3/search">
-    <label for="size">Results Size</label>
-    <input type="text" id="size" name="size" value="100" placeholder="10">
+      <div class="results-section" id="resultsSection">
+        <div class="results-header">
+          <span class="results-count" id="resultsCount"></span>
+        </div>
+        <div id="resultsContainer"></div>
+      </div>
+    </div>
 
-    <!-- <label for="json">json formatted results?</label> -->
-    <!-- <select id="json" name="json"> -->
-    <!--   <option value="false">I dont want json</option> -->
-    <!--   <option value="true">I want json</option> -->
-    <!-- </select> -->
+    <footer>
+      Browse the <a href="https://helpersofyourjoy.com/media/">complete archive</a>
+    </footer>
+  </div>
 
-    <label for="q">mp3 files with these words</label>
-    <textarea id="q" name="q" placeholder="2020 right division" style="height:200px">my gospel</textarea>
+  <script>
+    const form = document.getElementById('searchForm');
+    const input = document.getElementById('searchInput');
+    const btn = document.getElementById('searchBtn');
+    const resultsSection = document.getElementById('resultsSection');
+    const resultsContainer = document.getElementById('resultsContainer');
+    const resultsCount = document.getElementById('resultsCount');
 
-    <input type="submit" value="Submit">
-  </form>
-</div>
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const query = input.value.trim();
+      if (!query) return;
 
+      btn.disabled = true;
+      btn.textContent = 'Searching...';
+      resultsSection.classList.add('active');
+      resultsContainer.innerHTML = '<div class="loading"><span class="spinner"></span>Searching...</div>';
+
+      try {
+        const response = await fetch(`/mp3/search?q=${encodeURIComponent(query)}`);
+        const html = await response.text();
+
+        // Parse the response HTML to extract links
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = doc.querySelectorAll('a');
+
+        if (links.length === 0) {
+          resultsCount.textContent = 'No results found';
+          resultsContainer.innerHTML = '<div class="no-results">No MP3 files match your search. Try different keywords.</div>';
+        } else {
+          resultsCount.textContent = `${links.length} result${links.length !== 1 ? 's' : ''} found`;
+
+          let listHtml = '<ul class="results-list">';
+          links.forEach(link => {
+            const href = link.getAttribute('href');
+            const text = link.textContent;
+            // Extract path info
+            const parts = href.split('/');
+            const filename = parts.pop();
+            const path = parts.slice(-2).join('/');
+
+            listHtml += `
+              <li>
+                <a href="${href}" target="_blank">
+                  <div class="filename">${text}</div>
+                  ${path ? `<div class="path">${path}</div>` : ''}
+                </a>
+              </li>
+            `;
+          });
+          listHtml += '</ul>';
+          resultsContainer.innerHTML = listHtml;
+        }
+      } catch (err) {
+        resultsCount.textContent = 'Error';
+        resultsContainer.innerHTML = '<div class="no-results">An error occurred. Please try again.</div>';
+        console.error(err);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search';
+      }
+    });
+
+    // Focus input on load
+    input.focus();
+  </script>
 </body>
-<center> To see all of our mp3 library, feel free to navigate our <a href="https://helpersofyourjoy.com/media/">complete archive</a></center>
 </html>
